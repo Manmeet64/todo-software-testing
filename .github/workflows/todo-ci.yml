@@ -1,0 +1,112 @@
+name: Todo App CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'todo-backend/**'
+      - 'todo-frontend/**'
+      - 'tests/todo-selenium/**'
+      - 'tests/jmeter/**'
+      - 'Jenkinsfile'
+      - '.github/workflows/todo-ci.yml'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:6
+        ports:
+          - 27017:27017
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Node.js ──────────────────────────────────────────
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # ── 3. Install & start todo-backend ───────────────────────────
+      - name: Install todo-backend dependencies
+        working-directory: todo-backend
+        run: npm install
+
+      - name: Start todo-backend
+        working-directory: todo-backend
+        env:
+          PORT: 3001
+          MONGODB_URI: mongodb://127.0.0.1:27017/todo_mern
+        run: |
+          cp .env.example .env
+          nohup node src/server.js > /tmp/todo-backend.log 2>&1 &
+          echo "Backend starting..."
+          sleep 5
+          echo "--- Backend log ---"
+          cat /tmp/todo-backend.log
+
+      # ── 4. Install & start todo-frontend ──────────────────────────
+      - name: Install todo-frontend dependencies
+        working-directory: todo-frontend
+        run: npm install
+
+      - name: Start todo-frontend
+        working-directory: todo-frontend
+        run: |
+          nohup npm run dev > /tmp/todo-frontend.log 2>&1 &
+          echo "Frontend starting..."
+          sleep 15
+          echo "--- Frontend log ---"
+          cat /tmp/todo-frontend.log
+
+      # ── 5. Set up Java 17 ─────────────────────────────────────────
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # ── 6. Run Selenium tests ─────────────────────────────────────
+      - name: Run Selenium UI tests
+        working-directory: tests/todo-selenium
+        run: mvn test -DbaseUrl=http://localhost:5174 -Dheadless=true
+
+      - name: Publish TestNG results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Selenium TestNG Results
+          path: tests/todo-selenium/target/surefire-reports/*.xml
+          reporter: java-junit
+
+      # ── 7. Run JMeter tests ───────────────────────────────────────
+      - name: Install JMeter
+        run: |
+          wget -q https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.tgz
+          tar -xzf apache-jmeter-5.6.3.tgz
+          echo "$PWD/apache-jmeter-5.6.3/bin" >> $GITHUB_PATH
+
+      - name: Run JMeter API tests
+        run: |
+          jmeter -n \
+            -t tests/jmeter/todo_api_tests.jmx \
+            -l tests/jmeter/results.jtl \
+            -e -o tests/jmeter/report
+          echo "--- JMeter results ---"
+          cat tests/jmeter/results.jtl
+
+      - name: Upload JMeter results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jmeter-results
+          path: |
+            tests/jmeter/results.jtl
+            tests/jmeter/report/

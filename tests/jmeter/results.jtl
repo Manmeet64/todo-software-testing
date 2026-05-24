@@ -1,0 +1,5 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1779622225201,31,POST /todos - Create Todo,201,Created,Todo API Thread Group 1-1,text,true,,455,203,1,1,http://localhost:3001/todos,27,0,16
+1779622225234,5,GET /todos - Fetch All Todos,200,OK,Todo API Thread Group 1-1,text,true,,644,154,1,1,http://localhost:3001/todos,5,0,0
+1779622268761,26,POST /todos - Create Todo,201,Created,Todo API Thread Group 1-1,text,true,,455,203,1,1,http://localhost:3001/todos,23,0,15
+1779622268793,6,GET /todos - Fetch All Todos,200,OK,Todo API Thread Group 1-1,text,true,,827,154,1,1,http://localhost:3001/todos,6,0,0

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Todo Selenium Suite">
+    <test name="Todo UI Tests">
+        <classes>
+            <class name="com.example.selenium.TodoTest"/>
+        </classes>
+    </test>
+</suite>
