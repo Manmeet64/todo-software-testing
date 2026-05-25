@@ -43,68 +43,106 @@ public class TodoTest {
     }
 
     /**
-     * Test Case 1: Add a new todo task and verify it appears in the list.
+     * Test Case 1: Add a new todo and verify it appears in the list.
      */
     @Test
     public void addTodo() {
-        String taskTitle = "Task added with selenium";
+        String taskTitle = "Selenium - Buy groceries";
 
         driver.get(BASE_URL);
-        System.out.println("Navigating to: " + BASE_URL);
-
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("todo-input")));
 
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys(taskTitle);
-
-        WebElement addBtn = driver.findElement(By.id("add-todo-btn"));
-        addBtn.click();
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(
-            By.xpath("//td[contains(., '" + taskTitle + "')]")));
-
-        Assert.assertTrue(
-                driver.getPageSource().contains(taskTitle),
-                "Expected task '" + taskTitle + "' to appear in the todo list after adding."
-        );
-
-        System.out.println("addTodo PASSED — task found in list: " + taskTitle);
-    }
-
-    /**
-     * Test Case 2: Add a todo task and then delete it; verify it disappears from the list.
-     */
-    @Test
-    public void deleteTodo() {
-        String taskTitle = "Task Deleted with selenium";
-        driver.get(BASE_URL);
-        System.out.println("Navigating to: " + BASE_URL);
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("todo-input")));
-
-        WebElement input = driver.findElement(By.id("todo-input"));
-        input.sendKeys(taskTitle);
+        driver.findElement(By.id("todo-input")).sendKeys(taskTitle);
         driver.findElement(By.id("add-todo-btn")).click();
+
         wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//td[contains(., '" + taskTitle + "')]")));
 
         Assert.assertTrue(
                 driver.getPageSource().contains(taskTitle),
-                "Task should be present before deletion."
+                "Task should appear in the list after adding."
         );
+        System.out.println("addTodo PASSED — task visible: " + taskTitle);
+    }
 
-        WebElement deleteIcon = driver.findElement(
-                By.xpath("//tr[.//td[contains(., '" + taskTitle + "')]]//i[contains(@class,'fa-trash')]"));
-        deleteIcon.click();
+    /**
+     * Test Case 2: Add a task then delete it and verify it is gone.
+     */
+    @Test
+    public void deleteTodo() {
+        String taskTitle = "Selenium - Call the bank";
+
+        driver.get(BASE_URL);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("todo-input")));
+
+        driver.findElement(By.id("todo-input")).sendKeys(taskTitle);
+        driver.findElement(By.id("add-todo-btn")).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//td[contains(., '" + taskTitle + "')]")));
+
+        driver.findElement(
+                By.xpath("//tr[.//td[contains(., '" + taskTitle + "')]]//i[contains(@class,'fa-trash')]")
+        ).click();
 
         wait.until(ExpectedConditions.invisibilityOfElementLocated(
                 By.xpath("//td[contains(., '" + taskTitle + "')]")));
 
         Assert.assertFalse(
                 driver.getPageSource().contains(taskTitle),
-                "Expected task '" + taskTitle + "' to be removed after deletion."
+                "Task should be removed after deletion."
         );
+        System.out.println("deleteTodo PASSED — task removed: " + taskTitle);
+    }
 
-        System.out.println("deleteTodo PASSED — task removed from list: " + taskTitle);
+    /**
+     * Test Case 3: Add a task and mark it as complete using the checkbox.
+     */
+    @Test
+    public void markTodoComplete() {
+        String taskTitle = "Selenium - Read a book";
+
+        driver.get(BASE_URL);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("todo-input")));
+
+        driver.findElement(By.id("todo-input")).sendKeys(taskTitle);
+        driver.findElement(By.id("add-todo-btn")).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//td[contains(., '" + taskTitle + "')]")));
+
+        WebElement checkbox = driver.findElement(
+                By.xpath("//tr[.//td[contains(., '" + taskTitle + "')]]//input[@type='checkbox']"));
+        checkbox.click();
+
+        wait.until(ExpectedConditions.attributeContains(
+                By.xpath("//tr[.//td[contains(., '" + taskTitle + "')]]//input[@type='checkbox']"),
+                "class", ""));
+
+        Assert.assertTrue(checkbox.isSelected(), "Checkbox should be checked after clicking.");
+        System.out.println("markTodoComplete PASSED — task marked complete: " + taskTitle);
+    }
+
+    /**
+     * Test Case 4: Add a task with a due date and verify it shows in the list.
+     */
+    @Test
+    public void addTodoWithDueDate() {
+        String taskTitle = "Selenium - Submit assignment";
+        String dueDate   = "2026-12-31";
+
+        driver.get(BASE_URL);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("todo-input")));
+
+        driver.findElement(By.id("todo-input")).sendKeys(taskTitle);
+        driver.findElement(By.id("todo-due-date")).sendKeys(dueDate);
+        driver.findElement(By.id("add-todo-btn")).click();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//td[contains(., '" + taskTitle + "')]")));
+
+        Assert.assertTrue(
+                driver.getPageSource().contains(taskTitle),
+                "Task with due date should appear in the list."
+        );
+        System.out.println("addTodoWithDueDate PASSED — task with due date visible: " + taskTitle);
     }
 }

@@ -67,6 +67,13 @@ function Todos() {
             })
     }
 
+    // Delete all todos
+    function deleteAllTodos() {
+        fetch(API_URL, { method: 'DELETE' })
+            .then(() => setTodos([]))
+            .catch((err) => console.log(err))
+    }
+
     // Delete a todo by id
     function deleteTodo(id) {
         console.log(id)
@@ -91,7 +98,10 @@ function Todos() {
     return (
         <section className={styles.container}>
             <div className={styles.header}>
-                <h1 className={styles.container_title}>Todo List</h1>
+                <h1 className={styles.container_title}>My Tasks</h1>
+                <button id="delete-all-btn" className={styles.deleteAllBtn} onClick={deleteAllTodos}>
+                    <i className="fa-solid fa-trash"></i> Delete All
+                </button>
             </div>
 
             {/* Add task form */}

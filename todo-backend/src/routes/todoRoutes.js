@@ -57,6 +57,16 @@ router.put('/:id', async (req, res) => {
     }
 })
 
+// DELETE /todos — delete all todos
+router.delete('/', async (_req, res) => {
+    try {
+        await Todo.updateMany({ disabled: { $ne: true } }, { disabled: true })
+        res.json({ message: 'All todos deleted successfully' })
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to delete all todos', error: error.message })
+    }
+})
+
 // DELETE /todos/:id — delete a todo by id (soft delete)
 router.delete('/:id', async (req, res) => {
     try {

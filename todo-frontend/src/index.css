@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 * {
   margin: 0px;
@@ -13,7 +13,7 @@
 }
 
 body {
-  background-color: #f9fafb;
+  background-color: #F5F1EB;
   color: #111827;
   min-height: 100vh;
 }

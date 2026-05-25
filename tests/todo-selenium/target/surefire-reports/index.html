@@ -92,7 +92,7 @@
               <div class="suite-section-content">
                 <ul>
                   <li>
-                    <span class="method-stats">2 methods,   2 passed</span>
+                    <span class="method-stats">4 methods,   4 passed</span>
                   </li>
                   <li>
                     <span class="method-list-title passed">Passed methods</span>
@@ -108,7 +108,17 @@
                       <br/>
                       <span>
                         <img src="passed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Todo_Selenium_Suite" title="com.example.selenium.TodoTest" class="method navigator-link" hash-for-method="addTodoWithDueDate">addTodoWithDueDate</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="passed.png" width="3%"/>
                         <a href="#" panel-name="suite-Todo_Selenium_Suite" title="com.example.selenium.TodoTest" class="method navigator-link" hash-for-method="deleteTodo">deleteTodo</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="passed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Todo_Selenium_Suite" title="com.example.selenium.TodoTest" class="method navigator-link" hash-for-method="markTodoComplete">markTodoComplete</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                     </div> <!-- method-list-content passed suite-Todo_Selenium_Suite -->
@@ -138,9 +148,23 @@
               </div> <!-- method -->
               <div class="method">
                 <div class="method-content">
+                  <a name="addTodoWithDueDate">
+                  </a> <!-- addTodoWithDueDate -->
+                  <span class="method-name">addTodoWithDueDate</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
                   <a name="deleteTodo">
                   </a> <!-- deleteTodo -->
                   <span class="method-name">deleteTodo</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="markTodoComplete">
+                  </a> <!-- markTodoComplete -->
+                  <span class="method-name">markTodoComplete</span>
                 </div> <!-- method-content -->
               </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
@@ -148,7 +172,7 @@
         </div> <!-- panel Todo_Selenium_Suite -->
         <div panel-name="test-xml-Todo_Selenium_Suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">/Users/husainhakim/Personal/TO-DO/tests/todo-selenium/testng.xml</span>
+            <span class="header-content">/Users/manmeetsingh/Downloads/TO-DO-Selenium/tests/todo-selenium/testng.xml</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <pre>
@@ -197,20 +221,28 @@ data.addColumn('number', 'Number');
 data.addColumn('string', 'Method');
 data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
-data.addRows(2);
+data.addRows(4);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'deleteTodo')
+data.setCell(0, 1, 'addTodo')
 data.setCell(0, 2, 'com.example.selenium.TodoTest')
-data.setCell(0, 3, 936);
+data.setCell(0, 3, 1867);
 data.setCell(1, 0, 1)
-data.setCell(1, 1, 'addTodo')
+data.setCell(1, 1, 'markTodoComplete')
 data.setCell(1, 2, 'com.example.selenium.TodoTest')
-data.setCell(1, 3, 920);
+data.setCell(1, 3, 1184);
+data.setCell(2, 0, 2)
+data.setCell(2, 1, 'deleteTodo')
+data.setCell(2, 2, 'com.example.selenium.TodoTest')
+data.setCell(2, 3, 976);
+data.setCell(3, 0, 3)
+data.setCell(3, 1, 'addTodoWithDueDate')
+data.setCell(3, 2, 'com.example.selenium.TodoTest')
+data.setCell(3, 3, 572);
 window.suiteTableData['Todo_Selenium_Suite']= { tableData: data, tableDiv: 'times-div-Todo_Selenium_Suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 1 seconds</span>
+              <span class="suite-total-time">Total running time: 4 seconds</span>
               <div id="times-div-Todo_Selenium_Suite">
               </div> <!-- times-div-Todo_Selenium_Suite -->
             </div> <!-- times-div -->
@@ -243,23 +275,47 @@ return data;
               </div> <!-- configuration-method before -->
               <div class="test-method">
                 <span class="method-name">addTodo</span>
-                <span class="method-start">2151 ms</span>
+                <span class="method-start">1778 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">tearDown</span>
-                <span class="method-start">3072 ms</span>
+                <span class="method-start">3645 ms</span>
               </div> <!-- configuration-method after -->
               <div class="configuration-method before">
                 <span class="method-name">setup</span>
-                <span class="method-start">3181 ms</span>
+                <span class="method-start">3773 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
-                <span class="method-name">deleteTodo</span>
-                <span class="method-start">3867 ms</span>
+                <span class="method-name">addTodoWithDueDate</span>
+                <span class="method-start">4342 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">tearDown</span>
-                <span class="method-start">4804 ms</span>
+                <span class="method-start">4915 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">setup</span>
+                <span class="method-start">5023 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">deleteTodo</span>
+                <span class="method-start">5477 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">6453 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">setup</span>
+                <span class="method-start">6560 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">markTodoComplete</span>
+                <span class="method-start">7102 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">8286 ms</span>
               </div> <!-- configuration-method after -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->

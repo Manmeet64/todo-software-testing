@@ -82,9 +82,19 @@ pipeline {
             }
         }
 
+        stage('Run Cypress Tests') {
+            steps {
+                echo '==> Running Cypress UI tests'
+                dir('tests/todo-cypress') {
+                    sh 'npm install'
+                    sh 'npx cypress run --headless'
+                }
+            }
+        }
+
         stage('Run JMeter Tests') {
             steps {
-                echo '==> Running JMeter API tests (POST /todos, GET /todos)'
+                echo '==> Running JMeter API tests (POST /todos, GET /todos, DELETE /todos)'
                 sh '''
                     if command -v jmeter &> /dev/null; then
                         jmeter -n \

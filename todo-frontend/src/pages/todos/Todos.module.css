@@ -1,138 +1,186 @@
 .container {
   width: 100%;
-  max-width: 640px;
-  margin: 10vh auto;
+  max-width: 680px;
+  margin: 6vh auto;
+  padding: 0 20px 40px;
   display: flex;
   flex-direction: column;
-  padding: 0 24px;
 }
 
+/* Header */
 .header {
-  margin-bottom: 32px;
-  text-align: left;
+  margin-bottom: 28px;
+  text-align: center;
 }
 
 .container_title {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 700;
-  color: #000;
-  letter-spacing: -0.04em;
+  color: #A8553F;
+  letter-spacing: -0.03em;
 }
 
-/* Add form */
+.deleteAllBtn {
+  margin-top: 12px;
+  height: 38px;
+  border: 1.5px solid #A8553F;
+  border-radius: 10px;
+  background: transparent;
+  padding: 0 18px;
+  color: #A8553F;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.deleteAllBtn:hover {
+  background: #A8553F;
+  color: #fff;
+}
+
+/* Add form card */
 .addForm {
   width: 100%;
   display: flex;
-  gap: 12px;
-  margin-bottom: 40px;
+  gap: 10px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  border: 1px solid #e8e0d6;
+  border-radius: 18px;
+  padding: 16px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 12px rgba(168, 85, 63, 0.08);
 }
 
 .addInput {
   flex: 1;
-  height: 48px;
-  border-radius: 12px;
+  min-width: 160px;
+  height: 46px;
+  border-radius: 10px;
   padding: 0 16px;
-  border: 1px solid #eaeaea;
-  background: #fafafa;
-  color: #000;
+  border: 1.5px solid #e8e0d6;
+  background: #F5F1EB;
+  color: #111;
   outline: none;
-  font-size: 15px;
+  font-size: 14px;
   transition: all 0.2s ease;
 }
 
 .addInput::placeholder {
-  color: #888;
+  color: #b0a090;
 }
 
 .addInput:focus {
-  border-color: #000;
+  border-color: #A8553F;
   background: #fff;
-  box-shadow: 0 0 0 1px #000;
+  box-shadow: 0 0 0 3px rgba(168, 85, 63, 0.12);
 }
 
 .addDateInput {
-  width: 140px;
-  height: 48px;
-  border-radius: 12px;
-  padding: 0 16px;
-  border: 1px solid #eaeaea;
-  background: #fafafa;
+  width: 150px;
+  height: 46px;
+  border-radius: 10px;
+  padding: 0 12px;
+  border: 1.5px solid #e8e0d6;
+  background: #F5F1EB;
   color: #555;
   outline: none;
-  font-size: 14px;
+  font-size: 13px;
   transition: all 0.2s ease;
   font-family: inherit;
 }
 
 .addDateInput:focus {
-  border-color: #000;
+  border-color: #A8553F;
   background: #fff;
-  box-shadow: 0 0 0 1px #000;
+  box-shadow: 0 0 0 3px rgba(168, 85, 63, 0.12);
 }
 
 .addBtn {
-  height: 48px;
+  height: 46px;
   border: none;
-  border-radius: 12px;
-  background-color: #000;
-  padding: 0 24px;
+  border-radius: 10px;
+  background-color: #A8553F;
+  padding: 0 22px;
   color: #fff;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.1s ease, background-color 0.2s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 8px;
+  box-shadow: 0 4px 12px rgba(168, 85, 63, 0.3);
+  white-space: nowrap;
 }
 
 .addBtn:hover {
-  background-color: #333;
+  background-color: #8f4433;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(168, 85, 63, 0.4);
 }
 
 .addBtn:active {
-  transform: scale(0.96);
+  transform: scale(0.97);
 }
 
-/* Table disguised inside a gorgeous card */
+/* Table card */
 table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  border-radius: 16px;
-  border: 1px solid #eaeaea;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(168, 85, 63, 0.1);
   overflow: hidden;
+  border: 1px solid #e8e0d6;
+}
+
+thead {
+  background-color: #A8553F;
 }
 
 th {
-  display: none;
+  padding: 14px 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: left;
 }
 
+th:nth-child(1) { display: none; }
+th:nth-child(4) { text-align: center; }
+th:nth-child(5) { text-align: right; }
+
 td {
-  padding: 20px;
-  font-size: 15px;
-  color: #111;
-  border-bottom: 1px solid #eaeaea;
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #374151;
+  border-bottom: 1px solid #f3ede6;
 }
 
 tr:last-child td {
   border-bottom: none;
 }
 
-tr {
-  transition: background-color 0.2s ease;
+tbody tr {
+  transition: background-color 0.15s ease;
 }
 
-tr:hover {
-  background-color: #fafafa;
+tbody tr:hover {
+  background-color: #faf7f3;
 }
 
 /* Column sizing */
 td:nth-child(1) { display: none; }
-td:nth-child(2) { width: auto; font-weight: 500; }
-td:nth-child(3) { width: 120px; color: #666; font-size: 14px; }
-td:nth-child(4) { width: 50px; text-align: center; }
+td:nth-child(2) { font-weight: 500; color: #111827; }
+td:nth-child(3) { width: 110px; color: #6b7280; font-size: 13px; }
+td:nth-child(4) { width: 60px; text-align: center; }
 td:nth-child(5) { width: 60px; text-align: right; }
 
 .actions {
@@ -142,33 +190,38 @@ td:nth-child(5) { width: 60px; text-align: right; }
 }
 
 .icon_delete {
-  color: #999;
-  font-size: 18px;
+  color: #d1c4b8;
+  font-size: 15px;
   transition: all 0.2s ease;
   padding: 8px;
+  border-radius: 8px;
 }
 
 .icon_delete:hover {
   cursor: pointer;
-  color: #e00;
-  transform: scale(1.1);
+  color: #A8553F;
+  background: #fdf0ec;
 }
 
-/* Completed state */
+/* Completed row */
+.completedRow {
+  background-color: #faf7f3;
+}
+
 .completedText {
   text-decoration: line-through;
-  color: #999;
+  color: #b0a090;
   font-weight: 400;
 }
 
-/* Custom Checkbox - beautifully round */
+/* Custom Checkbox */
 .checkbox {
   appearance: none;
   background-color: #fff;
   margin: 0;
   width: 22px;
   height: 22px;
-  border: 2px solid #ddd;
+  border: 2px solid #d1c4b8;
   border-radius: 50%;
   display: grid;
   place-content: center;
@@ -188,21 +241,26 @@ td:nth-child(5) { width: 60px; text-align: right; }
 }
 
 .checkbox:hover {
-  border-color: #aaa;
+  border-color: #A8553F;
 }
 
 .checkbox:checked {
-  background-color: #000;
-  border-color: #000;
+  background-color: #A8553F;
+  border-color: #A8553F;
 }
 
 .checkbox:checked::before {
   transform: scale(1);
 }
 
+/* Empty state */
 .emptyMsg {
-  color: #888;
+  color: #b0a090;
   font-size: 15px;
   margin-top: 32px;
   text-align: center;
+  padding: 40px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1.5px dashed #e8e0d6;
 }

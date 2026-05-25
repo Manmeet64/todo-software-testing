@@ -1,0 +1,13 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1779697681245,12,POST /todos - Create Todo,201,Created,Todo API Thread Group 1-1,text,true,,455,203,1,1,http://localhost:3001/todos,12,0,3
+1779697681258,16,GET /todos - Fetch All Todos,200,OK,Todo API Thread Group 1-1,text,true,,452,154,1,1,http://localhost:3001/todos,16,0,0
+1779697681274,7,DELETE /todos - Delete All Todos,200,OK,Todo API Thread Group 1-1,text,true,,311,176,1,1,http://localhost:3001/todos,7,0,0
+1779697714810,7,POST /todos - Create Todo,201,Created,Todo API Thread Group 1-1,text,true,,455,203,1,1,http://localhost:3001/todos,7,0,3
+1779697714817,2,GET /todos - Fetch All Todos,200,OK,Todo API Thread Group 1-1,text,true,,452,154,1,1,http://localhost:3001/todos,2,0,0
+1779697714820,1,DELETE /todos - Delete All Todos,200,OK,Todo API Thread Group 1-1,text,true,,311,176,1,1,http://localhost:3001/todos,1,0,0
+1779697729765,5,POST /todos - Create Todo,201,Created,Todo API Thread Group 1-1,text,true,,455,203,1,1,http://localhost:3001/todos,5,0,1
+1779697729770,3,GET /todos - Fetch All Todos,200,OK,Todo API Thread Group 1-1,text,true,,452,154,1,1,http://localhost:3001/todos,3,0,0
+1779697729773,2,DELETE /todos - Delete All Todos,200,OK,Todo API Thread Group 1-1,text,true,,311,176,1,1,http://localhost:3001/todos,2,0,0
+1779698009274,9,POST /todos - Create Todo,201,Created,Todo API Thread Group 1-1,text,true,,455,203,1,1,http://localhost:3001/todos,7,0,3
+1779698009287,3,GET /todos - Fetch All Todos,200,OK,Todo API Thread Group 1-1,text,true,,452,154,1,1,http://localhost:3001/todos,3,0,0
+1779698009290,2,DELETE /todos - Delete All Todos,200,OK,Todo API Thread Group 1-1,text,true,,311,176,1,1,http://localhost:3001/todos,2,0,0
