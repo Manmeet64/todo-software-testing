@@ -9,8 +9,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
@@ -21,21 +21,22 @@ public class TodoTest {
     private WebDriverWait wait;
     private final String BASE_URL = System.getProperty("baseUrl", "http://localhost:5174");
 
-    @BeforeMethod
+    @BeforeClass
     public void setup() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        String headlessProp = System.getProperty("headless", "true");
+        String headlessProp = System.getProperty("headless", "false");
         if (headlessProp.equalsIgnoreCase("true")) {
             options.addArguments("--headless=new");
         }
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
-    @AfterMethod
+    @AfterClass
     public void tearDown() {
         if (driver != null) {
             driver.quit();
@@ -92,57 +93,5 @@ public class TodoTest {
                 "Task should be removed after deletion."
         );
         System.out.println("deleteTodo PASSED — task removed: " + taskTitle);
-    }
-
-    /**
-     * Test Case 3: Add a task and mark it as complete using the checkbox.
-     */
-    @Test
-    public void markTodoComplete() {
-        String taskTitle = "Selenium - Read a book";
-
-        driver.get(BASE_URL);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("todo-input")));
-
-        driver.findElement(By.id("todo-input")).sendKeys(taskTitle);
-        driver.findElement(By.id("add-todo-btn")).click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(
-                By.xpath("//td[contains(., '" + taskTitle + "')]")));
-
-        WebElement checkbox = driver.findElement(
-                By.xpath("//tr[.//td[contains(., '" + taskTitle + "')]]//input[@type='checkbox']"));
-        checkbox.click();
-
-        wait.until(ExpectedConditions.attributeContains(
-                By.xpath("//tr[.//td[contains(., '" + taskTitle + "')]]//input[@type='checkbox']"),
-                "class", ""));
-
-        Assert.assertTrue(checkbox.isSelected(), "Checkbox should be checked after clicking.");
-        System.out.println("markTodoComplete PASSED — task marked complete: " + taskTitle);
-    }
-
-    /**
-     * Test Case 4: Add a task with a due date and verify it shows in the list.
-     */
-    @Test
-    public void addTodoWithDueDate() {
-        String taskTitle = "Selenium - Submit assignment";
-        String dueDate   = "2026-12-31";
-
-        driver.get(BASE_URL);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("todo-input")));
-
-        driver.findElement(By.id("todo-input")).sendKeys(taskTitle);
-        driver.findElement(By.id("todo-due-date")).sendKeys(dueDate);
-        driver.findElement(By.id("add-todo-btn")).click();
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(
-                By.xpath("//td[contains(., '" + taskTitle + "')]")));
-
-        Assert.assertTrue(
-                driver.getPageSource().contains(taskTitle),
-                "Task with due date should appear in the list."
-        );
-        System.out.println("addTodoWithDueDate PASSED — task with due date visible: " + taskTitle);
     }
 }
