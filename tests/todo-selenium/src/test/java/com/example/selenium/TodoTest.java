@@ -61,7 +61,7 @@ public class TodoTest {
         addBtn.click();
 
         wait.until(ExpectedConditions.presenceOfElementLocated(
-                By.xpath("//td[contains(., '" + taskTitle + "')]")));
+            By.xpath("//td[contains(., '" + taskTitle + "')]")));
 
         Assert.assertTrue(
                 driver.getPageSource().contains(taskTitle),
