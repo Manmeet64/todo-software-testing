@@ -5,6 +5,7 @@ pipeline {
         TODO_BACKEND_PORT  = '3001'
         TODO_FRONTEND_PORT = '5174'
         MONGODB_URI        = 'mongodb://127.0.0.1:27017/todo_mern'
+        PATH               = "/opt/homebrew/bin:/opt/homebrew/opt/openjdk@21/bin:${env.PATH}"
     }
 
     stages {
@@ -28,6 +29,7 @@ pipeline {
         stage('Start Todo Backend') {
             steps {
                 echo '==> Starting todo-backend on port 3001'
+                sh 'lsof -ti :3001,5174,5175,5176 | xargs kill -9 || true'
                 dir('todo-backend') {
                     sh '''
                         cp .env.example .env
@@ -97,6 +99,8 @@ pipeline {
                 echo '==> Running JMeter API tests (POST /todos, GET /todos, DELETE /todos)'
                 sh '''
                     if command -v jmeter &> /dev/null; then
+                        rm -f tests/jmeter/results.jtl
+                        rm -rf tests/jmeter/report
                         jmeter -n \
                             -t tests/jmeter/todo_api_tests.jmx \
                             -l tests/jmeter/results.jtl \
