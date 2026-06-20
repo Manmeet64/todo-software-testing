@@ -25,7 +25,7 @@ public class TodoTest {
 
     @BeforeClass
     public void setup() {
-        WebDriverManager.chromedriver().setup();
+        WebDriverManager.chromedriver().browserVersion("149").setup();
         ChromeOptions options = new ChromeOptions();
         if (System.getProperty("headless", "false").equalsIgnoreCase("true")) {
             options.addArguments("--headless=new");
@@ -36,6 +36,9 @@ public class TodoTest {
         options.addArguments("--remote-debugging-port=0");
         options.addArguments("--disable-extensions");
         options.addArguments("--disable-background-networking");
+        options.addArguments("--user-data-dir=/tmp/chrome-jenkins-profile");
+        options.addArguments("--disable-software-rasterizer");
+        options.addArguments("--no-first-run");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));

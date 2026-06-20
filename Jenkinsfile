@@ -36,6 +36,15 @@ pipeline {
             steps {
                 echo '==> Starting todo-backend on port 3001'
                 sh 'lsof -ti :3001,5174,5175,5176 | xargs kill -9 || true'
+                sh '''
+                    if ! pgrep -x mongod > /dev/null; then
+                        echo "MongoDB not running — starting it..."
+                        brew services start mongodb-community || mongod --fork --logpath /tmp/mongod.log --dbpath /usr/local/var/mongodb || true
+                        sleep 3
+                    else
+                        echo "MongoDB already running"
+                    fi
+                '''
                 dir('todo-backend') {
                     sh '''
                         cp .env.example .env
@@ -43,7 +52,7 @@ pipeline {
                         echo $! > /tmp/todo-backend.pid
                         echo "Backend PID: $(cat /tmp/todo-backend.pid)"
                         echo "Waiting for backend on port 3001..."
-                        for i in $(seq 1 20); do
+                        for i in $(seq 1 30); do
                             if curl -s http://localhost:3001/health > /dev/null 2>&1; then
                                 echo "Backend ready after ${i}s"
                                 break
@@ -93,6 +102,7 @@ pipeline {
             steps {
                 echo '==> Running Selenium UI tests — mvn clean test'
                 dir('tests/todo-selenium') {
+                    sh 'rm -rf /tmp/chrome-jenkins-profile'
                     sh 'mvn clean test -DbaseUrl=http://localhost:${TODO_FRONTEND_PORT} -Dheadless=true'
                 }
             }
