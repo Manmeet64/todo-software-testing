@@ -42,7 +42,14 @@ pipeline {
                         PORT=${TODO_BACKEND_PORT} MONGODB_URI=${MONGODB_URI} nohup node src/server.js > /tmp/todo-backend.log 2>&1 &
                         echo $! > /tmp/todo-backend.pid
                         echo "Backend PID: $(cat /tmp/todo-backend.pid)"
-                        sleep 5
+                        echo "Waiting for backend on port 3001..."
+                        for i in $(seq 1 20); do
+                            if curl -s http://localhost:3001/health > /dev/null 2>&1; then
+                                echo "Backend ready after ${i}s"
+                                break
+                            fi
+                            sleep 1
+                        done
                         echo "--- Backend startup log ---"
                         cat /tmp/todo-backend.log
                     '''
@@ -67,7 +74,14 @@ pipeline {
                         nohup npm run dev > /tmp/todo-frontend.log 2>&1 &
                         echo $! > /tmp/todo-frontend.pid
                         echo "Frontend PID: $(cat /tmp/todo-frontend.pid)"
-                        sleep 10
+                        echo "Waiting for frontend on port 5174..."
+                        for i in $(seq 1 30); do
+                            if curl -s http://localhost:5174 > /dev/null 2>&1; then
+                                echo "Frontend ready after ${i}s"
+                                break
+                            fi
+                            sleep 1
+                        done
                         echo "--- Frontend startup log ---"
                         cat /tmp/todo-frontend.log
                     '''
@@ -79,12 +93,7 @@ pipeline {
             steps {
                 echo '==> Running Selenium UI tests — mvn clean test'
                 dir('tests/todo-selenium') {
-                    sh '''
-                        mvn clean test \
-                            -DbaseUrl=http://localhost:${TODO_FRONTEND_PORT} \
-                            -Dheadless=true \
-                            -Dwebdriver.chrome.args="--no-sandbox,--disable-dev-shm-usage,--disable-gpu,--remote-debugging-port=0"
-                    '''
+                    sh 'mvn clean test -DbaseUrl=http://localhost:${TODO_FRONTEND_PORT} -Dheadless=true'
                 }
             }
             post {

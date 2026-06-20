@@ -32,6 +32,10 @@ public class TodoTest {
         }
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--remote-debugging-port=0");
+        options.addArguments("--disable-extensions");
+        options.addArguments("--disable-background-networking");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
