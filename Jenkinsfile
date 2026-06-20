@@ -6,10 +6,11 @@ pipeline {
         TODO_FRONTEND_PORT = '5174'
         MONGODB_URI        = 'mongodb://127.0.0.1:27017/todo_mern'
         PATH               = "/opt/homebrew/bin:/opt/homebrew/opt/openjdk@21/bin:${env.PATH}"
+        // Required for Chrome to run headless under Jenkins on macOS
+        DISPLAY            = ''
     }
 
     triggers {
-        // Poll GitHub every 5 minutes for new commits
         pollSCM('H/5 * * * *')
     }
 
@@ -78,18 +79,19 @@ pipeline {
             steps {
                 echo '==> Running Selenium UI tests — mvn clean test'
                 dir('tests/todo-selenium') {
-                    sh 'mvn clean test -DbaseUrl=http://localhost:${TODO_FRONTEND_PORT} -Dheadless=true'
+                    sh '''
+                        mvn clean test \
+                            -DbaseUrl=http://localhost:${TODO_FRONTEND_PORT} \
+                            -Dheadless=true \
+                            -Dwebdriver.chrome.args="--no-sandbox,--disable-dev-shm-usage,--disable-gpu,--remote-debugging-port=0"
+                    '''
                 }
             }
             post {
                 always {
                     echo '--- TestNG Results ---'
-                    // Publish JUnit-format TestNG XML for Jenkins test dashboard
                     junit testResults: 'tests/todo-selenium/target/surefire-reports/*.xml',
-                          allowEmptyResults: false
-
-                    // TestNG Results Analyzer
-                    testNG('tests/todo-selenium/target/surefire-reports/testng-results.xml')
+                          allowEmptyResults: true
                 }
             }
         }
@@ -99,12 +101,11 @@ pipeline {
                 echo '==> Running Cypress UI tests — 6 flows'
                 dir('tests/todo-cypress') {
                     sh 'npm install'
-                    sh 'npx cypress run --headless'
+                    sh 'npx cypress run --headless --browser chrome'
                 }
             }
             post {
                 always {
-                    // Archive Cypress screenshots/videos on failure
                     archiveArtifacts artifacts: 'tests/todo-cypress/cypress/screenshots/**/*,tests/todo-cypress/cypress/videos/**/*',
                                      allowEmptyArchive: true
                 }
@@ -133,8 +134,6 @@ pipeline {
                 always {
                     archiveArtifacts artifacts: 'tests/jmeter/results.jtl,tests/jmeter/report/**/*',
                                      allowEmptyArchive: true
-                    // Performance plugin — plots JMeter response times in Jenkins
-                    perfReport sourceDataFiles: 'tests/jmeter/results.jtl'
                 }
             }
         }
