@@ -9,8 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -23,40 +22,27 @@ public class TodoTest {
     private WebDriverWait wait;
     private final String BASE_URL = System.getProperty("baseUrl", "http://localhost:5174");
 
-    @BeforeClass
+    @BeforeMethod
     public void setup() {
-        WebDriverManager.chromedriver().browserVersion("149").setup();
+        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        if (System.getProperty("headless", "false").equalsIgnoreCase("true")) {
+        if (System.getProperty("headless", "true").equalsIgnoreCase("true")) {
             options.addArguments("--headless=new");
         }
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--remote-debugging-port=0");
-        options.addArguments("--disable-extensions");
-        options.addArguments("--disable-background-networking");
-        options.addArguments("--user-data-dir=/tmp/chrome-jenkins-profile");
-        options.addArguments("--disable-software-rasterizer");
-        options.addArguments("--no-first-run");
         driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-    }
-
-    @AfterClass
-    public void tearDown() {
-        if (driver != null) driver.quit();
-    }
-
-    // Runs before every test — cleans existing tasks so each test starts fresh
-    @BeforeMethod
-    public void cleanupBeforeTest() {
+        // Clean slate before every test
         driver.get(BASE_URL);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("delete-all-btn")));
         driver.findElement(By.id("delete-all-btn")).click();
-        // Wait until table is empty (either empty state msg or 0 rows)
-        wait.until(driver -> driver.findElements(By.xpath("//tbody/tr")).size() == 0);
+        wait.until(d -> d.findElements(By.xpath("//tbody/tr")).size() == 0);
+    }
+
+    @AfterMethod
+    public void tearDown() {
+        if (driver != null) driver.quit();
     }
 
     // ─── Helper ───────────────────────────────────────────────────────────────

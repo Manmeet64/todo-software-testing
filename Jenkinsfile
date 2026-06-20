@@ -6,8 +6,6 @@ pipeline {
         TODO_FRONTEND_PORT = '5174'
         MONGODB_URI        = 'mongodb://127.0.0.1:27017/todo_mern'
         PATH               = "/opt/homebrew/bin:/opt/homebrew/opt/openjdk@21/bin:${env.PATH}"
-        // Required for Chrome to run headless under Jenkins on macOS
-        DISPLAY            = ''
     }
 
     triggers {
@@ -36,29 +34,13 @@ pipeline {
             steps {
                 echo '==> Starting todo-backend on port 3001'
                 sh 'lsof -ti :3001,5174,5175,5176 | xargs kill -9 || true'
-                sh '''
-                    if ! pgrep -x mongod > /dev/null; then
-                        echo "MongoDB not running — starting it..."
-                        brew services start mongodb-community || mongod --fork --logpath /tmp/mongod.log --dbpath /usr/local/var/mongodb || true
-                        sleep 3
-                    else
-                        echo "MongoDB already running"
-                    fi
-                '''
                 dir('todo-backend') {
                     sh '''
                         cp .env.example .env
                         PORT=${TODO_BACKEND_PORT} MONGODB_URI=${MONGODB_URI} nohup node src/server.js > /tmp/todo-backend.log 2>&1 &
                         echo $! > /tmp/todo-backend.pid
                         echo "Backend PID: $(cat /tmp/todo-backend.pid)"
-                        echo "Waiting for backend on port 3001..."
-                        for i in $(seq 1 30); do
-                            if curl -s http://localhost:3001/health > /dev/null 2>&1; then
-                                echo "Backend ready after ${i}s"
-                                break
-                            fi
-                            sleep 1
-                        done
+                        sleep 5
                         echo "--- Backend startup log ---"
                         cat /tmp/todo-backend.log
                     '''
@@ -83,14 +65,7 @@ pipeline {
                         nohup npm run dev > /tmp/todo-frontend.log 2>&1 &
                         echo $! > /tmp/todo-frontend.pid
                         echo "Frontend PID: $(cat /tmp/todo-frontend.pid)"
-                        echo "Waiting for frontend on port 5174..."
-                        for i in $(seq 1 30); do
-                            if curl -s http://localhost:5174 > /dev/null 2>&1; then
-                                echo "Frontend ready after ${i}s"
-                                break
-                            fi
-                            sleep 1
-                        done
+                        sleep 10
                         echo "--- Frontend startup log ---"
                         cat /tmp/todo-frontend.log
                     '''
@@ -102,7 +77,6 @@ pipeline {
             steps {
                 echo '==> Running Selenium UI tests — mvn clean test'
                 dir('tests/todo-selenium') {
-                    sh 'rm -rf /tmp/chrome-jenkins-profile'
                     sh 'mvn clean test -DbaseUrl=http://localhost:${TODO_FRONTEND_PORT} -Dheadless=true'
                 }
             }
