@@ -88,11 +88,8 @@ pipeline {
                     junit testResults: 'tests/todo-selenium/target/surefire-reports/*.xml',
                           allowEmptyResults: false
 
-                    // TestNG Results Analyzer — rich HTML dashboard in Jenkins
-                    step([
-                        $class: 'Publisher',
-                        reportFilenamePattern: 'tests/todo-selenium/target/surefire-reports/testng-results.xml'
-                    ])
+                    // TestNG Results Analyzer
+                    testNG('tests/todo-selenium/target/surefire-reports/testng-results.xml')
                 }
             }
         }
