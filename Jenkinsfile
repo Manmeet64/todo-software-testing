@@ -8,6 +8,11 @@ pipeline {
         PATH               = "/opt/homebrew/bin:/opt/homebrew/opt/openjdk@21/bin:${env.PATH}"
     }
 
+    triggers {
+        // Poll GitHub every 5 minutes for new commits
+        pollSCM('H/5 * * * *')
+    }
+
     stages {
 
         stage('Checkout') {
@@ -71,32 +76,47 @@ pipeline {
 
         stage('Run Selenium Tests') {
             steps {
-                echo '==> Running Selenium UI tests (TodoTest)'
+                echo '==> Running Selenium UI tests — mvn clean test'
                 dir('tests/todo-selenium') {
-                    sh 'mvn test -DbaseUrl=http://localhost:${TODO_FRONTEND_PORT} -Dheadless=true'
+                    sh 'mvn clean test -DbaseUrl=http://localhost:${TODO_FRONTEND_PORT} -Dheadless=true'
                 }
             }
             post {
                 always {
-                    echo '--- TestNG results ---'
-                    junit 'tests/todo-selenium/target/surefire-reports/*.xml'
+                    echo '--- TestNG Results ---'
+                    // Publish JUnit-format TestNG XML for Jenkins test dashboard
+                    junit testResults: 'tests/todo-selenium/target/surefire-reports/*.xml',
+                          allowEmptyResults: false
+
+                    // TestNG Results Analyzer — rich HTML dashboard in Jenkins
+                    step([
+                        $class: 'Publisher',
+                        reportFilenamePattern: 'tests/todo-selenium/target/surefire-reports/testng-results.xml'
+                    ])
                 }
             }
         }
 
         stage('Run Cypress Tests') {
             steps {
-                echo '==> Running Cypress UI tests'
+                echo '==> Running Cypress UI tests — 6 flows'
                 dir('tests/todo-cypress') {
                     sh 'npm install'
                     sh 'npx cypress run --headless'
+                }
+            }
+            post {
+                always {
+                    // Archive Cypress screenshots/videos on failure
+                    archiveArtifacts artifacts: 'tests/todo-cypress/cypress/screenshots/**/*,tests/todo-cypress/cypress/videos/**/*',
+                                     allowEmptyArchive: true
                 }
             }
         }
 
         stage('Run JMeter Tests') {
             steps {
-                echo '==> Running JMeter API tests (POST /todos, GET /todos, DELETE /todos)'
+                echo '==> Running JMeter API load tests — 6 scenarios'
                 sh '''
                     if command -v jmeter &> /dev/null; then
                         rm -f tests/jmeter/results.jtl
@@ -109,13 +129,15 @@ pipeline {
                         cat tests/jmeter/results.jtl
                     else
                         echo "WARNING: jmeter not found in PATH — skipping JMeter stage"
-                        echo "Install JMeter and ensure it is on PATH to enable this stage"
                     fi
                 '''
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'tests/jmeter/results.jtl', allowEmptyArchive: true
+                    archiveArtifacts artifacts: 'tests/jmeter/results.jtl,tests/jmeter/report/**/*',
+                                     allowEmptyArchive: true
+                    // Performance plugin — plots JMeter response times in Jenkins
+                    perfReport sourceDataFiles: 'tests/jmeter/results.jtl'
                 }
             }
         }
